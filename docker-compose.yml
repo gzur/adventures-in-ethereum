@@ -1,0 +1,30 @@
+version: '3.1'
+services:
+
+  client:
+    image: ethereum/client-go
+    restart: always
+    entrypoint: geth --testnet --rpc --rpcaddr "0.0.0.0"
+
+    environment:
+        SOMEENV: "HAZ_TEST_ENV!"
+    volumes:
+      - ./src:/solidity_src
+      - ./client_root_home:/root
+
+    ports:
+      - 8545:8545
+      - 30303:30303
+
+  compiler:
+    image: ethereum/solc:stable
+    volumes:
+      - ./src:/solidity_src
+    entrypoint: sh
+
+  sim:
+    image: offk/eth_simulator:local
+    volumes:
+      - ./src:/solidity_src
+      - ./simulator_root_home:/root
+
